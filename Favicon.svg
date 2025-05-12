@@ -1,0 +1,40 @@
+// public/favicon.svg
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Simple square background -->
+  <rect width="64" height="64" fill="#ffffff" />
+  
+  <!-- Logo mark scaled down for favicon -->
+  <g transform="translate(8, 12) scale(0.15)">
+    <!-- Roof -->
+    <path 
+      d="M10,40 L100,0 L190,40" 
+      fill="none" 
+      stroke="#1e3a8a" 
+      stroke-width="25" 
+      stroke-linejoin="round"
+      stroke-linecap="round" 
+    />
+    
+    <!-- House Base -->
+    <path 
+      d="M40,40 L40,90 L160,90 L160,40" 
+      fill="none" 
+      stroke="#1e3a8a" 
+      stroke-width="25" 
+      stroke-linejoin="round"
+      stroke-linecap="round" 
+    />
+    
+    <!-- Paint Stroke -->
+    <line 
+      x1="20" 
+      y1="65" 
+      x2="180" 
+      y2="65" 
+      stroke="#3b82f6" 
+      stroke-width="25" 
+      stroke-linecap="round" 
+    />
+  </g>
+</svg>

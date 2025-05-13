@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import emailjs from 'emailjs-com' // Import the emailjs-com module
+import React, { useState, useEffect } from 'react'
+import emailjs from 'emailjs-com'
 
 const ContactForm = ({ darkMode }) => {
   const [formData, setFormData] = useState({
@@ -11,7 +11,13 @@ const ContactForm = ({ darkMode }) => {
   })
 
   const [statusMessage, setStatusMessage] = useState('')
-  const [isSuccess, setIsSuccess] = useState(false) // Track success or error state
+  const [isSuccess, setIsSuccess] = useState(false)
+
+  // Initialize EmailJS when component mounts
+  useEffect(() => {
+    // Initialize EmailJS with your User ID
+    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_USER_ID)
+  }, [])
 
   // Handle changes in form fields
   const handleChange = (e) => {
@@ -39,11 +45,12 @@ const ContactForm = ({ darkMode }) => {
 
     // Send the form data using EmailJS
     emailjs
+    emailjs
       .sendForm(
-        process.env.REACT_APP_EMAILJS_SERVICE_ID, // Service ID
-        process.env.REACT_APP_EMAILJS_TEMPLATE_ID, // Template ID
-        e.target, // The form data (target is the form element)
-        process.env.REACT_APP_EMAILJS_USER_ID // User ID
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+        e.target,
+        process.env.NEXT_PUBLIC_EMAILJS_USER_ID
       )
       .then(
         (result) => {
@@ -53,7 +60,7 @@ const ContactForm = ({ darkMode }) => {
           )
           setIsSuccess(true)
 
-          // Reset form fields after a brief delay to allow user to read the message
+          // Reset form fields after a brief delay
           setTimeout(() => {
             setFormData({
               name: '',
@@ -62,8 +69,8 @@ const ContactForm = ({ darkMode }) => {
               service: '',
               message: '',
             })
-            setStatusMessage('') // Clear the success message
-          }, 3000) // 3 seconds to show the success message before reset
+            setStatusMessage('')
+          }, 3000)
         },
         (error) => {
           // On error
@@ -73,10 +80,9 @@ const ContactForm = ({ darkMode }) => {
           )
           setIsSuccess(false)
 
-          // Optionally reset the fields after an error or keep them for another try
           setTimeout(() => {
-            setStatusMessage('') // Clear the error message
-          }, 3000) // Show the error message for 3 seconds
+            setStatusMessage('')
+          }, 3000)
         }
       )
   }

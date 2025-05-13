@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import emailjs from 'emailjs-com'
 
 const ContactForm = ({ darkMode }) => {
+
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,9 +17,19 @@ const ContactForm = ({ darkMode }) => {
 
   // Initialize EmailJS when component mounts
   useEffect(() => {
-    // Initialize EmailJS with your User ID
-    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_USER_ID)
-  }, [])
+    // Log environment variables (will show in browser console)
+    console.log("Environment Variables Check:");
+    console.log("USER ID:", process.env.NEXT_PUBLIC_EMAILJS_USER_ID);
+    console.log("SERVICE ID:", process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID);
+    console.log("TEMPLATE ID:", process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID);
+    
+    // Check if any are undefined
+    if (!process.env.NEXT_PUBLIC_EMAILJS_USER_ID) {
+      console.error("USER ID is undefined!");
+    }
+    
+    // Initialize EmailJS
+    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_USER_ID);
 
   // Handle changes in form fields
   const handleChange = (e) => {

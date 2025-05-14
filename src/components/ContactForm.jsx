@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react'
 import emailjs from 'emailjs-com'
 
 const ContactForm = ({ darkMode }) => {
-
-  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,18 +16,24 @@ const ContactForm = ({ darkMode }) => {
   // Initialize EmailJS when component mounts
   useEffect(() => {
     // Log environment variables (will show in browser console)
-    console.log("Environment Variables Check:");
-    console.log("USER ID:", process.env.NEXT_PUBLIC_EMAILJS_USER_ID);
-    console.log("SERVICE ID:", process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID);
-    console.log("TEMPLATE ID:", process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID);
-    
+    console.log('Environment Variables Check:')
+    console.log('USER ID:', process.env.NEXT_PUBLIC_EMAILJS_USER_ID)
+    console.log('SERVICE ID:', process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID)
+    console.log('TEMPLATE ID:', process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID)
+
     // Check if any are undefined
     if (!process.env.NEXT_PUBLIC_EMAILJS_USER_ID) {
-      console.error("USER ID is undefined!");
+      console.error('USER ID is undefined!')
+      return
     }
-    
-    // Initialize EmailJS
-    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_USER_ID);
+
+    try {
+      // Initialize EmailJS
+      emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_USER_ID)
+    } catch (error) {
+      console.error('Failed to initialize EmailJS:', error)
+    }
+  }, []) // Empty dependency array to run only once on mount
 
   // Handle changes in form fields
   const handleChange = (e) => {
@@ -56,7 +60,6 @@ const ContactForm = ({ darkMode }) => {
     setIsSuccess(false)
 
     // Send the form data using EmailJS
-    emailjs
     emailjs
       .sendForm(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,

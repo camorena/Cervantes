@@ -108,12 +108,12 @@ const Footer = ({ darkMode }) => {
               </li>
               <li className="flex items-center text-gray-300">
                 <Mail size={16} className="mr-2" />
-                info@cervantesdrywall.com
+                humberto63382@gmail.com
               </li>
               <li className="text-gray-300">
-                123 Main Street,
+                9575 Arnold Avenue,
                 <br />
-                Eagan, MN 55123
+                Inver Grove Heights, MN 55077
               </li>
             </ul>
           </div>

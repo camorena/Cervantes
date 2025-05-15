@@ -9,15 +9,15 @@ const Footer = ({ darkMode }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
             <h3 className="text-xl font-bold text-white mb-4">
-              Cervantes Drywall & Painting
+              Cervantes Painting & Remodeling
             </h3>
             <p className="text-gray-300 mb-4">
-              Quality interior renovation services since 2007. Family-owned and
-              operated.
+              Quality interior painting and renovation services since 2007.
+              Family-owned and operated.
             </p>
             <div className="flex space-x-4">
               <a
-                href="#"
+                href="https://www.facebook.com/cervantespaintingremodelingllc"
                 className="text-gray-300 hover:text-white transition-colors">
                 <span className="sr-only">Facebook</span>
                 <svg
@@ -109,7 +109,7 @@ const Footer = ({ darkMode }) => {
               <li className="flex items-center text-gray-300">
                 <Mail size={16} className="mr-2" />
                 <a
-                  href="/contact"
+                  href="#contact"
                   className="text-gray-300 hover:text-white transition-colors">
                   Contact Us
                 </a>
@@ -125,8 +125,8 @@ const Footer = ({ darkMode }) => {
 
         <div className="pt-8 border-t border-gray-700 text-center md:flex md:justify-between md:text-left">
           <p className="text-gray-400">
-            &copy; {new Date().getFullYear()} Cervantes Drywall & Painting. All
-            rights reserved.
+            &copy; {new Date().getFullYear()} Cervantes Painting & Remodeling
+            LLC. All rights reserved.
           </p>
           <ul className="flex justify-center md:justify-end space-x-6 mt-4 md:mt-0">
             <li>

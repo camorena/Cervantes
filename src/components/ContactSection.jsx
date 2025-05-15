@@ -65,7 +65,7 @@ const ContactSection = ({ darkMode }) => {
                         darkMode ? 'text-gray-300' : 'text-gray-700'
                       }`}>
                       <a
-                        href="/contact"
+                        href="#contact"
                         className={`${
                           darkMode
                             ? 'text-gray-300 hover:text-white'

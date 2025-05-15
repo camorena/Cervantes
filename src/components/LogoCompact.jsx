@@ -98,11 +98,9 @@ const LogoCompact = ({ className = '', darkMode = false }) => {
         <div
           className="text-center text-[7px] font-semibold tracking-wide flex items-center justify-center space-x-0.5"
           style={{ color: textColor }}>
-          <span>RENOVATION</span>
-          <span>•</span>
           <span>PAINTING</span>
           <span>•</span>
-          <span>DRYWALL</span>
+          <span>REMODELING</span>
         </div>
       </div>
     </div>

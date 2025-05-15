@@ -133,11 +133,9 @@ const Logo = ({ className = '', darkMode = false }) => {
         <div
           className="text-center text-[9px] font-semibold tracking-wide flex items-center justify-center space-x-1"
           style={{ color: textColor }}>
-          <span>RENOVATION</span>
-          <span>•</span>
           <span>PAINTING</span>
           <span>•</span>
-          <span>DRYWALL</span>
+          <span>REMODELING</span>
         </div>
       </div>
     </div>

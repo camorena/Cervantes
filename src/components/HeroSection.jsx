@@ -23,16 +23,17 @@ const HeroSection = ({ darkMode }) => {
           <div className="md:w-1/2 mb-8 md:mb-0 flex items-center justify-center text-center">
             <div className="max-w-xl w-full">
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight whitespace-nowrap">
-                Expert <span className="text-[#5046e5]">Drywall</span> &{' '}
-                <span className="text-[#5046e5]">Painting</span>
+                Expert <span className="text-[#5046e5]">Painting</span> &{' '}
+                <span className="text-[#5046e5]">Remodeling</span>
               </h1>
               <p
                 className={`text-lg sm:text-xl mb-8 ${
                   darkMode ? 'text-gray-300' : 'text-gray-700'
                 }`}>
-                Founded in 2007, Cervantes has established itself as one of the
-                highest quality providers of interior renovation services in the
-                region.
+                Since 2007, Cervantes has delivered quality interior painting
+                and remodeling services throughout the Twin Cities. Local
+                homeowners and businesses trust our skilled team for reliable,
+                professional results.
               </p>
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                 <a

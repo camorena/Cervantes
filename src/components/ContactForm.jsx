@@ -12,25 +12,17 @@ const ContactForm = ({ darkMode }) => {
 
   const [statusMessage, setStatusMessage] = useState('')
   const [isSuccess, setIsSuccess] = useState(false)
-  const [isInitialized, setIsInitialized] = useState(false) // To track EmailJS initialization
+  const [isInitialized, setIsInitialized] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // --- IMPORTANT: Environment variable access for Create React App ---
-  // Variables must be prefixed with REACT_APP_ in your .env file and Vercel settings
+  // Environment variables access for Create React App
   const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY
   const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID
   const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID
 
   // Initialize EmailJS when component mounts
   useEffect(() => {
-    console.log('Environment Variables Check (Client-Side for CRA):')
-    console.log('REACT_APP_EMAILJS_PUBLIC_KEY:', publicKey)
-    console.log('REACT_APP_EMAILJS_SERVICE_ID:', serviceId)
-    console.log('REACT_APP_EMAILJS_TEMPLATE_ID:', templateId)
-
     if (!publicKey) {
-      console.error(
-        'EmailJS Public Key (User ID) is undefined! Please check Vercel environment variables and ensure they are prefixed with REACT_APP_ and the project is redeployed.'
-      )
       setStatusMessage(
         'Configuration error: Unable to send emails at this time.'
       )
@@ -38,29 +30,16 @@ const ContactForm = ({ darkMode }) => {
       setIsInitialized(false)
       return
     }
-    if (!serviceId) {
-      console.error(
-        'EmailJS Service ID is undefined! Please check Vercel environment variables (should be REACT_APP_... for CRA).'
-      )
-    }
-    if (!templateId) {
-      console.error(
-        'EmailJS Template ID is undefined! Please check Vercel environment variables (should be REACT_APP_... for CRA).'
-      )
-    }
 
     try {
-      // Initialize EmailJS with your Public Key (User ID)
       emailjs.init(publicKey)
       setIsInitialized(true)
-      console.log('EmailJS initialized successfully.')
     } catch (error) {
-      console.error('Failed to initialize EmailJS:', error)
       setStatusMessage('Initialization error. Please try again later.')
       setIsSuccess(false)
       setIsInitialized(false)
     }
-  }, [publicKey, serviceId, templateId]) // Re-run if these values change
+  }, [publicKey])
 
   // Handle changes in form fields
   const handleChange = (e) => {
@@ -72,7 +51,7 @@ const ContactForm = ({ darkMode }) => {
   }
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (!isInitialized) {
@@ -88,7 +67,6 @@ const ContactForm = ({ darkMode }) => {
         'Email configuration is incomplete. Cannot send message.'
       )
       setIsSuccess(false)
-      console.error('Attempted to send email with missing EmailJS IDs.')
       return
     }
 
@@ -101,51 +79,46 @@ const ContactForm = ({ darkMode }) => {
 
     setStatusMessage('Sending your message...')
     setIsSuccess(false)
+    setIsSubmitting(true)
 
-    // Send the form data using EmailJS
-    // The third argument to sendForm is the form element itself (e.target)
-    // The fourth argument is your Public Key (User ID)
-    emailjs
-      .sendForm(
-        serviceId,
-        templateId,
-        e.target, // The form element
-        publicKey
+    try {
+      await emailjs.sendForm(serviceId, templateId, e.target, publicKey)
+
+      setStatusMessage('Thank you for your inquiry! We will contact you soon.')
+      setIsSuccess(true)
+
+      // Reset form fields after a brief delay
+      setTimeout(() => {
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service: '',
+          message: '',
+        })
+        setStatusMessage('')
+      }, 3000)
+    } catch (error) {
+      setStatusMessage(
+        `Oops! Something went wrong: ${error.text || 'Please try again later.'}`
       )
-      .then(
-        (result) => {
-          console.log('Email sent successfully:', result.text)
-          setStatusMessage(
-            'Thank you for your inquiry! We will contact you soon.'
-          )
-          setIsSuccess(true)
-          // Reset form fields after a brief delay
-          setTimeout(() => {
-            setFormData({
-              name: '',
-              email: '',
-              phone: '',
-              service: '',
-              message: '',
-            })
-            setStatusMessage('')
-          }, 3000)
-        },
-        (error) => {
-          console.error('Error sending email:', error)
-          setStatusMessage(
-            `Oops! Something went wrong: ${
-              error.text || 'Please try again later.'
-            }`
-          )
-          setIsSuccess(false)
-          // Keep error message a bit longer
-          setTimeout(() => {
-            setStatusMessage('')
-          }, 5000)
-        }
-      )
+      setIsSuccess(false)
+
+      // Keep error message a bit longer
+      setTimeout(() => {
+        setStatusMessage('')
+      }, 5000)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
+
+  const isFormValid = Boolean(
+    formData.name && formData.email && formData.message && formData.service
+  )
+
+  const isFormDisabled =
+    !isInitialized || !publicKey || !serviceId || !templateId || isSubmitting
 
   return (
     <div
@@ -168,15 +141,18 @@ const ContactForm = ({ darkMode }) => {
             <input
               type="text"
               id="name"
-              name="name" // This 'name' attribute MUST match a parameter in your EmailJS template (e.g., {{name}} or {{from_name}})
+              name="name"
               value={formData.name}
               onChange={handleChange}
               required
+              disabled={isFormDisabled}
               className={`w-full px-4 py-3 rounded-lg ${
                 darkMode
                   ? 'bg-gray-700 text-white border border-gray-600 focus:border-indigo-500'
                   : 'bg-white text-gray-900 border border-gray-300 focus:border-indigo-500'
-              } focus:outline-none transition-colors`}
+              } focus:outline-none transition-colors ${
+                isFormDisabled ? 'opacity-60 cursor-not-allowed' : ''
+              }`}
             />
           </div>
 
@@ -192,15 +168,18 @@ const ContactForm = ({ darkMode }) => {
             <input
               type="email"
               id="email"
-              name="email" // This 'name' attribute MUST match a parameter in your EmailJS template (e.g., {{email}} or {{reply_to}})
+              name="email"
               value={formData.email}
               onChange={handleChange}
               required
+              disabled={isFormDisabled}
               className={`w-full px-4 py-3 rounded-lg ${
                 darkMode
                   ? 'bg-gray-700 text-white border border-gray-600 focus:border-indigo-500'
                   : 'bg-white text-gray-900 border border-gray-300 focus:border-indigo-500'
-              } focus:outline-none transition-colors`}
+              } focus:outline-none transition-colors ${
+                isFormDisabled ? 'opacity-60 cursor-not-allowed' : ''
+              }`}
             />
           </div>
 
@@ -216,14 +195,17 @@ const ContactForm = ({ darkMode }) => {
             <input
               type="tel"
               id="phone"
-              name="phone" // This 'name' attribute MUST match a parameter in your EmailJS template (e.g., {{phone}})
+              name="phone"
               value={formData.phone}
               onChange={handleChange}
+              disabled={isFormDisabled}
               className={`w-full px-4 py-3 rounded-lg ${
                 darkMode
                   ? 'bg-gray-700 text-white border border-gray-600 focus:border-indigo-500'
                   : 'bg-white text-gray-900 border border-gray-300 focus:border-indigo-500'
-              } focus:outline-none transition-colors`}
+              } focus:outline-none transition-colors ${
+                isFormDisabled ? 'opacity-60 cursor-not-allowed' : ''
+              }`}
             />
           </div>
 
@@ -238,15 +220,18 @@ const ContactForm = ({ darkMode }) => {
             </label>
             <select
               id="service"
-              name="service" // This 'name' attribute MUST match a parameter in your EmailJS template (e.g., {{service}})
+              name="service"
               value={formData.service}
               onChange={handleChange}
-              required // Or remove if not strictly required
+              required
+              disabled={isFormDisabled}
               className={`w-full px-4 py-3 rounded-lg ${
                 darkMode
                   ? 'bg-gray-700 text-white border border-gray-600 focus:border-indigo-500'
                   : 'bg-white text-gray-900 border border-gray-300 focus:border-indigo-500'
-              } focus:outline-none transition-colors`}>
+              } focus:outline-none transition-colors ${
+                isFormDisabled ? 'opacity-60 cursor-not-allowed' : ''
+              }`}>
               <option value="">Select a service</option>
               <option value="interior-painting">Interior Painting</option>
               <option value="drywall-installation">Drywall Installation</option>
@@ -269,27 +254,30 @@ const ContactForm = ({ darkMode }) => {
           </label>
           <textarea
             id="message"
-            name="message" // This 'name' attribute MUST match a parameter in your EmailJS template (e.g., {{message}})
+            name="message"
             value={formData.message}
             onChange={handleChange}
             rows="4"
             required
+            disabled={isFormDisabled}
             className={`w-full px-4 py-3 rounded-lg ${
               darkMode
                 ? 'bg-gray-700 text-white border border-gray-600 focus:border-indigo-500'
                 : 'bg-white text-gray-900 border border-gray-300 focus:border-indigo-500'
-            } focus:outline-none transition-colors`}></textarea>
+            } focus:outline-none transition-colors ${
+              isFormDisabled ? 'opacity-60 cursor-not-allowed' : ''
+            }`}></textarea>
         </div>
 
         <button
           type="submit"
-          disabled={!isInitialized || !publicKey || !serviceId || !templateId} // Disable button if not initialized or IDs missing
+          disabled={isFormDisabled || !isFormValid}
           className={`w-full px-6 py-3 rounded-lg font-medium text-white transition-colors ${
-            !isInitialized || !publicKey || !serviceId || !templateId
-              ? 'bg-gray-400 cursor-not-allowed' // Style for disabled button
+            isFormDisabled || !isFormValid
+              ? 'bg-gray-400 cursor-not-allowed'
               : 'bg-indigo-600 hover:bg-indigo-700'
           }`}>
-          Submit Request
+          {isSubmitting ? 'Sending...' : 'Submit Request'}
         </button>
       </form>
 
@@ -298,8 +286,8 @@ const ContactForm = ({ darkMode }) => {
         <div
           className={`mt-4 p-4 rounded-lg text-center ${
             isSuccess
-              ? 'bg-green-100 text-green-700 border border-green-300' // Lighter success message
-              : 'bg-red-100 text-red-700 border border-red-300' // Lighter error message
+              ? 'bg-green-100 text-green-700 border border-green-300'
+              : 'bg-red-100 text-red-700 border border-red-300'
           }`}>
           <p>{statusMessage}</p>
         </div>

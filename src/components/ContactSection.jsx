@@ -59,21 +59,7 @@ const ContactSection = ({ darkMode }) => {
                     <Mail size={24} />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Email Us</h3>
-                    <p
-                      className={`${
-                        darkMode ? 'text-gray-300' : 'text-gray-700'
-                      }`}>
-                      <a
-                        href="#contact"
-                        className={`${
-                          darkMode
-                            ? 'text-gray-300 hover:text-white'
-                            : 'text-gray-700 hover:text-gray-900'
-                        } transition-colors`}>
-                        Contact Us
-                      </a>
-                    </p>
+                    <h3 className="font-bold text-lg mb-1">Contact Us</h3>
                     <p
                       className={`text-sm ${
                         darkMode ? 'text-gray-400' : 'text-gray-600'

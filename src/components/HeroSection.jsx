@@ -20,11 +20,15 @@ const HeroSection = ({ darkMode }) => {
 
         {/* Content Row - With proper spacing from logo */}
         <div className="flex flex-col md:flex-row md:items-center">
-          <div className="md:w-1/2 mb-8 md:mb-0 flex items-center justify-center text-center">
-            <div className="max-w-xl w-full">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight whitespace-nowrap">
-                Expert <span className="text-[#5046e5]">Painting</span> &{' '}
-                <span className="text-[#5046e5]">Remodeling</span>
+          {/* Text Column - Fixed padding and responsive text handling */}
+          <div className="md:w-1/2 md:pr-8 lg:pr-12 mb-8 md:mb-0 z-10">
+            <div className="max-w-xl mx-auto md:mx-0 text-center md:text-left">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                <span className="block md:inline">Premier </span>
+                <span className="text-[#5046e5] block md:inline">Paint </span>
+                <span className="text-[#5046e5] block md:inline">
+                  Solutions
+                </span>
               </h1>
               <p
                 className={`text-lg sm:text-xl mb-8 ${
@@ -35,7 +39,7 @@ const HeroSection = ({ darkMode }) => {
                 homeowners and businesses trust our skilled team for reliable,
                 professional results.
               </p>
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+              <div className="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
                 <a
                   href="#contact"
                   className="px-8 py-3 rounded-full font-medium transition-colors text-center bg-[#6c4ee5] hover:bg-[#5046e5] text-white">
@@ -54,6 +58,8 @@ const HeroSection = ({ darkMode }) => {
               </div>
             </div>
           </div>
+
+          {/* Image Column - Improved responsive handling */}
           <div className="md:w-1/2">
             <div
               className={`rounded-2xl overflow-hidden shadow-2xl ${

@@ -114,11 +114,7 @@ const Footer = ({ darkMode }) => {
                   Contact Us
                 </a>
               </li>
-              <li className="text-gray-300">
-                9575 Arnold Avenue,
-                <br />
-                Inver Grove Heights, MN 55077
-              </li>
+              <li className="text-gray-300">Inver Grove Heights, MN 55077</li>
             </ul>
           </div>
         </div>

@@ -108,7 +108,11 @@ const Footer = ({ darkMode }) => {
               </li>
               <li className="flex items-center text-gray-300">
                 <Mail size={16} className="mr-2" />
-                humberto63382@gmail.com
+                <a
+                  href="/contact"
+                  className="text-gray-300 hover:text-white transition-colors">
+                  Contact Us
+                </a>
               </li>
               <li className="text-gray-300">
                 9575 Arnold Avenue,

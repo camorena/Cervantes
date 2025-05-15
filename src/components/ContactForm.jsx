@@ -14,21 +14,22 @@ const ContactForm = ({ darkMode }) => {
   const [isSuccess, setIsSuccess] = useState(false)
   const [isInitialized, setIsInitialized] = useState(false) // To track EmailJS initialization
 
-  // Environment variable names (ensure these match your Vercel setup)
-  const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
-  const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
-  const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
+  // --- IMPORTANT: Environment variable access for Create React App ---
+  // Variables must be prefixed with REACT_APP_ in your .env file and Vercel settings
+  const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+  const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID
+  const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID
 
   // Initialize EmailJS when component mounts
   useEffect(() => {
-    console.log('Environment Variables Check (Client-Side):')
-    console.log('NEXT_PUBLIC_EMAILJS_PUBLIC_KEY:', publicKey)
-    console.log('NEXT_PUBLIC_EMAILJS_SERVICE_ID:', serviceId)
-    console.log('NEXT_PUBLIC_EMAILJS_TEMPLATE_ID:', templateId)
+    console.log('Environment Variables Check (Client-Side for CRA):')
+    console.log('REACT_APP_EMAILJS_PUBLIC_KEY:', publicKey)
+    console.log('REACT_APP_EMAILJS_SERVICE_ID:', serviceId)
+    console.log('REACT_APP_EMAILJS_TEMPLATE_ID:', templateId)
 
     if (!publicKey) {
       console.error(
-        'EmailJS Public Key (User ID) is undefined! Please check Vercel environment variables and ensure they are prefixed with NEXT_PUBLIC_ and the project is redeployed.'
+        'EmailJS Public Key (User ID) is undefined! Please check Vercel environment variables and ensure they are prefixed with REACT_APP_ and the project is redeployed.'
       )
       setStatusMessage(
         'Configuration error: Unable to send emails at this time.'
@@ -39,17 +40,17 @@ const ContactForm = ({ darkMode }) => {
     }
     if (!serviceId) {
       console.error(
-        'EmailJS Service ID is undefined! Please check Vercel environment variables.'
+        'EmailJS Service ID is undefined! Please check Vercel environment variables (should be REACT_APP_... for CRA).'
       )
-      // You might want to also prevent form submission if critical IDs are missing
     }
     if (!templateId) {
       console.error(
-        'EmailJS Template ID is undefined! Please check Vercel environment variables.'
+        'EmailJS Template ID is undefined! Please check Vercel environment variables (should be REACT_APP_... for CRA).'
       )
     }
 
     try {
+      // Initialize EmailJS with your Public Key (User ID)
       emailjs.init(publicKey)
       setIsInitialized(true)
       console.log('EmailJS initialized successfully.')
@@ -59,7 +60,7 @@ const ContactForm = ({ darkMode }) => {
       setIsSuccess(false)
       setIsInitialized(false)
     }
-  }, [publicKey, serviceId, templateId]) // Re-run if these values change (though they shouldn't after initial load)
+  }, [publicKey, serviceId, templateId]) // Re-run if these values change
 
   // Handle changes in form fields
   const handleChange = (e) => {
@@ -101,12 +102,15 @@ const ContactForm = ({ darkMode }) => {
     setStatusMessage('Sending your message...')
     setIsSuccess(false)
 
+    // Send the form data using EmailJS
+    // The third argument to sendForm is the form element itself (e.target)
+    // The fourth argument is your Public Key (User ID)
     emailjs
       .sendForm(
-        serviceId, // Use the variable defined above
-        templateId, // Use the variable defined above
+        serviceId,
+        templateId,
         e.target, // The form element
-        publicKey // Use the variable defined above
+        publicKey
       )
       .then(
         (result) => {
@@ -115,6 +119,7 @@ const ContactForm = ({ darkMode }) => {
             'Thank you for your inquiry! We will contact you soon.'
           )
           setIsSuccess(true)
+          // Reset form fields after a brief delay
           setTimeout(() => {
             setFormData({
               name: '',
@@ -134,9 +139,10 @@ const ContactForm = ({ darkMode }) => {
             }`
           )
           setIsSuccess(false)
+          // Keep error message a bit longer
           setTimeout(() => {
             setStatusMessage('')
-          }, 5000) // Increased timeout for error messages
+          }, 5000)
         }
       )
   }
@@ -162,7 +168,7 @@ const ContactForm = ({ darkMode }) => {
             <input
               type="text"
               id="name"
-              name="name" // Make sure this matches your EmailJS template placeholder e.g., {{name}} or {{from_name}}
+              name="name" // This 'name' attribute MUST match a parameter in your EmailJS template (e.g., {{name}} or {{from_name}})
               value={formData.name}
               onChange={handleChange}
               required
@@ -186,7 +192,7 @@ const ContactForm = ({ darkMode }) => {
             <input
               type="email"
               id="email"
-              name="email" // Make sure this matches your EmailJS template placeholder e.g., {{email}} or {{reply_to}}
+              name="email" // This 'name' attribute MUST match a parameter in your EmailJS template (e.g., {{email}} or {{reply_to}})
               value={formData.email}
               onChange={handleChange}
               required
@@ -210,7 +216,7 @@ const ContactForm = ({ darkMode }) => {
             <input
               type="tel"
               id="phone"
-              name="phone" // Make sure this matches your EmailJS template placeholder e.g., {{phone}}
+              name="phone" // This 'name' attribute MUST match a parameter in your EmailJS template (e.g., {{phone}})
               value={formData.phone}
               onChange={handleChange}
               className={`w-full px-4 py-3 rounded-lg ${
@@ -232,10 +238,10 @@ const ContactForm = ({ darkMode }) => {
             </label>
             <select
               id="service"
-              name="service" // Make sure this matches your EmailJS template placeholder e.g., {{service}}
+              name="service" // This 'name' attribute MUST match a parameter in your EmailJS template (e.g., {{service}})
               value={formData.service}
               onChange={handleChange}
-              required
+              required // Or remove if not strictly required
               className={`w-full px-4 py-3 rounded-lg ${
                 darkMode
                   ? 'bg-gray-700 text-white border border-gray-600 focus:border-indigo-500'
@@ -263,7 +269,7 @@ const ContactForm = ({ darkMode }) => {
           </label>
           <textarea
             id="message"
-            name="message" // Make sure this matches your EmailJS template placeholder e.g., {{message}}
+            name="message" // This 'name' attribute MUST match a parameter in your EmailJS template (e.g., {{message}})
             value={formData.message}
             onChange={handleChange}
             rows="4"
@@ -280,19 +286,20 @@ const ContactForm = ({ darkMode }) => {
           disabled={!isInitialized || !publicKey || !serviceId || !templateId} // Disable button if not initialized or IDs missing
           className={`w-full px-6 py-3 rounded-lg font-medium text-white transition-colors ${
             !isInitialized || !publicKey || !serviceId || !templateId
-              ? 'bg-gray-400 cursor-not-allowed'
+              ? 'bg-gray-400 cursor-not-allowed' // Style for disabled button
               : 'bg-indigo-600 hover:bg-indigo-700'
           }`}>
           Submit Request
         </button>
       </form>
 
+      {/* Display Success/Error Message */}
       {statusMessage && (
         <div
           className={`mt-4 p-4 rounded-lg text-center ${
             isSuccess
-              ? 'bg-green-100 text-green-700 border border-green-300'
-              : 'bg-red-100 text-red-700 border border-red-300'
+              ? 'bg-green-100 text-green-700 border border-green-300' // Lighter success message
+              : 'bg-red-100 text-red-700 border border-red-300' // Lighter error message
           }`}>
           <p>{statusMessage}</p>
         </div>

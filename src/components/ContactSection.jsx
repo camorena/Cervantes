@@ -64,7 +64,7 @@ const ContactSection = ({ darkMode }) => {
                       className={`${
                         darkMode ? 'text-gray-300' : 'text-gray-700'
                       }`}>
-                      info@cervantesdrywall.com
+                      humberto63382@gmail.com
                     </p>
                     <p
                       className={`text-sm ${

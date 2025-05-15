@@ -124,22 +124,6 @@ const Footer = ({ darkMode }) => {
             &copy; {new Date().getFullYear()} Cervantes Painting & Remodeling
             LLC. All rights reserved.
           </p>
-          <ul className="flex justify-center md:justify-end space-x-6 mt-4 md:mt-0">
-            <li>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white transition-colors">
-                Privacy Policy
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white transition-colors">
-                Terms of Service
-              </a>
-            </li>
-          </ul>
         </div>
       </div>
     </footer>
